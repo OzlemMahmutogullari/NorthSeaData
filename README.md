@@ -113,7 +113,7 @@ Cross-border (inter-zonal) AC branches extracted from the full `branchAC.txt` ne
 
 ### `ZPTDF_CL.txt` / `ZPTDF_OBZ.txt`
 
-Zonal Power Transfer Distribution Factor (ZPTDF) matrices, used for the zonal market clearing (first-stage) power flow model. Each row corresponds to a critical branch, each column to a zone. The matrix entry gives the sensitivity of power flow on that branch to a net injection change in that zone.
+Zonal Power Transfer Distribution Factor (ZPTDF) matrices, used for the zonal market clearing power flow model, are calculated beforehand to save time. Each row corresponds to a critical branch, each column to a zone. The matrix entry gives the sensitivity of power flow on that branch to a net injection change in that zone.
 
 - **`ZPTDF_CL.txt`** — HM (Home Market) configuration: 16 zones, offshore wind assigned to onshore zones.
 - **`ZPTDF_OBZ.txt`** — OBZ (Offshore Bidding Zone) configuration: 21 zones (16 onshore + 5 offshore).
