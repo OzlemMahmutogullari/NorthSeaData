@@ -1,8 +1,6 @@
-cd("C:\\Users\\omahmuto\\Desktop\\VS Code files\\UK_FR_BE_NL_DE_DK_NO_SE") #delete
 using CSV, DataFrames
 using Plots
 using JuMP
-ENV["GRB_LICENSE_FILE"] = "C:\\Users\\omahmuto\\gurobi.lic" #delete
 using Gurobi
 using LinearAlgebra
 using Printf
@@ -13,8 +11,8 @@ import Pkg
 #Change day_choice
 #Change case A-F (before SOLVE CCG)
 
-const DATA_DIR    = raw"C:\\Users\\omahmuto\\Desktop\\VS Code files\\UK_FR_BE_NL_DE_DK_NO_SE\\data"
-const ZPTDF_DIR   = raw"C:\\Users\\omahmuto\\Desktop\\VS Code files\\UK_FR_BE_NL_DE_DK_NO_SE"
+const DATA_DIR    = raw"path\\data"
+const ZPTDF_DIR   = raw"path\\ZPTDF"
 const RESULTS_DIR = "."
 
 design_choice ="HM" # "HM" or "OBZ"
