@@ -1,4 +1,4 @@
-# Adaptive Robust Optimization for Offshore Bidding Zone Design
+# Adaptive Robust Optimization for Frequency-Constrained Market Clearing Problem
 
 This repository contains the code and data for the paper:
 
@@ -6,7 +6,8 @@ This repository contains the code and data for the paper:
 >
 > Özlem Mahmutoğulları, Hakan Ergun
 >
-> KU Leuven / EnergyVille — ELECTA Research Group
+> EKECTA, KU Leuven 
+> Etch, EnergyVille
 
 ## Overview
 
@@ -18,7 +19,7 @@ We compare two electricity market designs for integrating large-scale offshore w
 The model is a **two-stage adaptive robust optimization** solved via **Column-and-Constraint Generation (CCG)**:
 
 1. **First stage (day-ahead zonal market clearing):** Unit commitment, generation dispatch, reserve procurement, and cross-zonal energy exchange under a ZPTDF-based flow model with frequency security constraints (inertia, RoCoF, nadir, FFR via HVDC converters).
-2. **Second stage (real-time redispatch):** Nodal redispatch under worst-case uncertainty realizations, including HVDC converter N-1 contingencies, RES forecast errors, and demand deviations.
+2. **Second stage (real-time redispatch):** Redispatch under worst-case uncertainty realizations, including HVDC converter contingencies, RES forecast errors, and demand deviations.
 
 Uncertainty is modeled via polyhedral uncertainty sets with three budget parameters:
 - `ΓC` — number of simultaneous HVDC converter outages (N-1 contingency)
@@ -29,9 +30,9 @@ Uncertainty is modeled via polyhedral uncertainty sets with three budget paramet
 
 ```
 ├── README.md
-├── a.jl                        # Single-hour model (DEC21)
-├── b.jl                        # Multi-hour model (24h, DEC21 or JUN21)
-├── c.jl                        # Single-hour model with det. vs robust comparison
+├── HMvsOBZ.jl                  # Single-hour model 
+├── DECvsJUN.jl                 # Multi-hour model (24h, DEC21 or JUN21)
+├── DETvsROB.jl                 # Single-hour model with det. vs robust comparison
 ├── data/
 │   ├── busAC.txt               # AC bus data (node locations, zones)
 │   ├── branchAC.txt            # AC branch data (lines, transformers)
@@ -75,12 +76,6 @@ HVDC cable data for all DC connections: existing cross-border interconnectors, h
 
 **Key columns:** `name` (cable/link name, e.g. NORNED, Nautilus), `fbusdc`/`tbusdc` (from/to DC bus indices), `fZone`/`tZone` (from/to zone names), `rateA` (cable capacity in MW), `type`.
 
-**Index ranges:**
-- `35`–`89`: existing HVDC interconnectors (e.g. STOREBAELT, ALEGRO, COBRA, NORNED, SKAGERRAK)
-- `1001`–`1011`: hub-to-shore cables (e.g. mainBE, mainNL, Nautilus, LionLink)
-- `2001`–`2005`: hub-to-hub cables (e.g. BE\_NL, TritonLink, DE\_NL, DE\_DK, NO\_DK)
-- `2011`–`2015`: second hub-to-shore cables (e.g. mainBE2, mainNL2)
-
 ### `convdc.txt` (47 converters)
 
 HVDC converter station parameters linking DC buses to AC buses. These converters enable power transfer between the AC and DC networks and provide Fast Frequency Response (FFR) headroom in the frequency security constraints. Converters `301`–`305` are the OWF hub converters (Pacmax = 10,000 MW placeholder, sized by connected cable capacity in the model).
@@ -105,14 +100,6 @@ Offshore wind farm hub definitions. Each hub aggregates one or more planned offs
 
 **Key columns:** `index` (hub index 1–5), `OWF` (hub identifier), `zone` (associated onshore zone under HM), `name` (full hub name), `lat`/`lon`, `capacity` (total installed capacity in MW).
 
-| Hub | Zone | Capacity |
-|-----|------|----------|
-| Belgian Princess Elisabeth Island | BE | 3,500 MW |
-| NL Energy Hubs | NL | 10,000 MW |
-| German Offshore Interconnection Cluster | DE | 10,000 MW |
-| Danish Energy Island | DK1 | 3,000 MW |
-| Sørlige Nordsjø 2 | NO2 | 3,000 MW |
-
 ### `zones.txt` (16 zones)
 
 Bidding zone definitions with centroid coordinates for the 16-zone representation of the North Sea region. Under the OBZ design, 5 additional offshore zones are created (one per hub), extending this to 21 zones.
@@ -134,9 +121,9 @@ Zonal Power Transfer Distribution Factor (ZPTDF) matrices, used for the zonal ma
 
 ## Scripts
 
-### `a.jl` — Single-Hour Model
+### `HMvsOBZ.jl` — Single-Hour Model
 
-Solves one representative hour (winter peak, DEC21) for a single uncertainty case. Set `design_choice = "HM"` or `"OBZ"` and uncomment one of the cases A–F before running. Outputs a single CSV row with DA cost, nodal redispatch cost, reserves, load shedding, inertia, zonal prices, and congestion revenue.
+Solves one representative hour for a single uncertainty case. Set `design_choice = "HM"` or `"OBZ"` and uncomment one of the cases A–F before running. Outputs include DA cost, nodal redispatch cost, reserves, load shedding, inertia, zonal prices, and congestion revenue.
 
 **Uncertainty cases:**
 
@@ -149,11 +136,11 @@ Solves one representative hour (winter peak, DEC21) for a single uncertainty cas
 | E | 1 | 10% of loads | 100% of RES | + 10% demand uncertainty |
 | F | 1 | 15% of loads | 100% of RES | + 15% demand uncertainty |
 
-### `b.jl` — Multi-Hour Model (24h)
+### `DECvsJUN.jl` — Multi-Hour Model (24h)
 
-Extends `a.jl` to solve all 24 hours of a representative day. Supports both `DEC21` (winter) and `JUN21` (summer) load/RES profiles. Collects hourly results and produces daily aggregates.
+Solves all 24 hours of a representative day. Supports both `DEC21` (winter) and `JUN21` (summer) load/RES profiles. Collects hourly results and produces daily aggregates.
 
-### `c.jl` — Deterministic vs Robust Comparison
+### `DETvsROBUST.jl` — Deterministic vs Robust Comparison
 
 Runs both a deterministic (Γ = 0) and a robust (with uncertainty budgets) solve for a given design, then evaluates both solutions under the worst-case scenario to compute the Value of Robustness (VoR), Cost of Uncertainty (CoU), and hedging cost.
 
@@ -170,7 +157,7 @@ The model uses a **16-zone representation of the North Sea region** covering 8 c
 | Netherlands (NL) | 1 | Continental |
 | Norway (NO1–NO5) | 5 | Nordic |
 | Sweden (SE1–SE4) | 4 | Nordic |
-| United Kingdom (UK) | 1 | UK (island) |
+| United Kingdom (UK) | 1 | UK |
 
 **Offshore wind farm hubs** (5 hubs, total 29.5 GW installed capacity):
 
@@ -184,62 +171,4 @@ The model uses a **16-zone representation of the North Sea region** covering 8 c
 
 Under the **OBZ design**, each hub forms its own offshore bidding zone (5 additional zones), connected to onshore zones and to each other via HVDC cables.
 
-## Requirements
 
-- **Julia** ≥ 1.9
-- **Packages:** `JuMP`, `Gurobi`, `CSV`, `DataFrames`, `LinearAlgebra`, `Printf`, `Plots`
-- **Gurobi** license (academic licenses available at [gurobi.com](https://www.gurobi.com/academia/academic-program-and-licenses/))
-
-Install Julia packages:
-
-```julia
-using Pkg
-Pkg.add(["JuMP", "Gurobi", "CSV", "DataFrames", "Plots"])
-```
-
-## Usage
-
-1. Clone the repository and set the paths at the top of each script:
-
-```julia
-const DATA_DIR    = "path/to/data"       # folder containing the .txt data files
-const ZPTDF_DIR   = "path/to/repo"       # folder containing ZPTDF_CL.txt / ZPTDF_OBZ.txt
-const RESULTS_DIR = "."                  # output directory
-```
-
-2. Set the Gurobi license path:
-
-```julia
-ENV["GRB_LICENSE_FILE"] = "path/to/gurobi.lic"
-```
-
-3. Choose the market design and uncertainty case, then run:
-
-```julia
-# In a.jl or c.jl:
-design_choice = "HM"    # or "OBZ"
-day_choice    = "DEC21"
-
-# Uncomment one case (A–F) in the uncertainty budget section, then:
-julia> include("a.jl")
-```
-
-4. To build the full comparison table, run each case (A–F) × each design (HM, OBZ) = 12 runs, and collect the CSV output rows.
-
-## Citation
-
-If you use this code or data, please cite:
-
-```bibtex
-@article{mahmutogullari2025obz,
-  title   = {Offshore Bidding Zones for Integrated Offshore Grids: A Two-Stage Adaptive Robust Optimization Approach},
-  author  = {Mahmutoğulları, Özlem and Ergun, Hakan},
-  year    = {2025},
-  journal = {},
-  doi     = {}
-}
-```
-
-## License
-
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
