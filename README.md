@@ -170,4 +170,9 @@ The model uses a **16-zone representation of the North Sea region** covering 8 c
 
 Under the **OBZ design**, each hub forms its own offshore bidding zone (5 additional zones), connected to onshore zones and to each other via HVDC cables.
 
+## Requirements
+Julia
+Packages: JuMP, Gurobi, CSV, DataFrames, LinearAlgebra, Printf, Plots
+Gurobi license
+
 
