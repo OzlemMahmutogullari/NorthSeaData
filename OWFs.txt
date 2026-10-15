@@ -1,0 +1,7 @@
+index	OWF	zone	name	lat	lon	capacity
+1	1	BE	Belgian Princess Elisabeth Island	51.6	2.65	3500
+2	2	NL	NL Energy Hubs	53.5	3.8	10000
+3	3	DE	German Offshore Interconnection Cluster	54.5	7.5	10000
+4	4	DK1	Danish Energy Island	56.4	6.85	3000
+5	5	NO2	Sorlige Nordsjo 2	57.7	4.9	3000
+
