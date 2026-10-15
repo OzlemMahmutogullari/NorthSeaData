@@ -6,8 +6,7 @@ This repository contains the code and data for the paper:
 >
 > Özlem Mahmutoğulları, Hakan Ergun
 >
-> EKECTA, KU Leuven 
-> Etch, EnergyVille
+> ELECTA, KU Leuven / Etch, EnergyVille
 
 ## Overview
 
