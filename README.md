@@ -1,8 +1,8 @@
-# Adaptive Robust Optimization for Frequency-Constrained Market Clearing Problem
+# North Sea Network
 
 This repository contains the code and data for the paper:
 
-> **Offshore Bidding Zones for Integrated Offshore Grids: A Two-Stage Adaptive Robust Optimization Approach**
+> **Adaptive Robust Optimization for Frequency-Constrained Market Clearing Problem**
 >
 > Özlem Mahmutoğulları, Hakan Ergun
 >
